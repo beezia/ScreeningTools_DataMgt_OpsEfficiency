@@ -1,14 +1,15 @@
 # ScreeningTools_DataMgt_OpsEfficiency
 
 **Overview**
+<br><br>
+This is Reference application and a demo showcasing Screening Tools Edge AI running on CPU + integrated GPU, that can:<br>
+	1. Detect anomalous results in real time (Auto-QC)<br>
+	2. Prioritize true biological “hits” vs noise <br>
+	3. Reduce manual review workload <br>
+	4. Provide predictive operational insights <br>
+    5. Run entirely on commodity edge hardware <br>
 
-This is Reference application and a demo showcasing Screening Tools Edge AI running on CPU + integrated GPU, that can:
-	1. Detect anomalous results in real time (Auto-QC)
-	2. Prioritize true biological “hits” vs noise
-	3. Reduce manual review workload
-	4. Provide predictive operational insights
-  5. Run entirely on commodity edge hardware
-
+<br>
 High-throughput screening (HTS) tools like Abbott Alinity, Hologic Panther, and Siemens Atellica—generate thousands of assay results per hour. While instrument automation has advanced, laboratories face persistent challenges:
 	1. Operational instability: subtle calibration drifts or mechanical issues can compromise data quality.
 	2. Biological prioritization: identifying top candidates quickly from thousands of samples is slow without AI.
