@@ -7,35 +7,37 @@ This is a reference application and a demo showcasing Screening Tools Edge AI ru
 	2. Prioritize true biological “hits” vs noise <br>
 	3. Reduce manual review workload <br>
 	4. Provide predictive operational insights <br>
-        5. Run entirely on commodity edge hardware <br>
+    5. Run entirely on commodity edge hardware <br>
 
 <br>
-High-throughput screening (HTS) tools like Abbott Alinity, Hologic Panther, and Siemens Atellica—generate thousands of assay results per hour. While instrument automation has advanced, laboratories face persistent challenges:
-	1. Operational instability: subtle calibration drifts or mechanical issues can compromise data quality.
-	2. Biological prioritization: identifying top candidates quickly from thousands of samples is slow without AI.
-	3. Data overload: managing assay and QC metrics in real time is complex.
-	4. Inefficient resource usage: CPU-heavy processing leaves iGPUs underutilized in edge deployments.
+High-throughput screening (HTS) tools like Abbott Alinity, Hologic Panther, and Siemens Atellica—generate thousands of assay results per hour. While instrument automation has advanced, laboratories face persistent challenges:<br>
+	1. Operational instability: subtle calibration drifts or mechanical issues can compromise data quality.<br>
+	2. Biological prioritization: identifying top candidates quickly from thousands of samples is slow without AI.<br>
+	3. Data overload: managing assay and QC metrics in real time is complex.<br>
+	4. Inefficient resource usage: CPU-heavy processing leaves iGPUs underutilized in edge deployments.<br>
 
+<br>
 This reference Solution (can be a demo)
-This reference solution runs an HTS Edge AI Console that addresses these challenges by combining AI-driven scoring, real-time QC monitoring, and workload-aware hardware acceleration on a standard Windows laptop with CPU + iGPU.
+This reference solution runs an HTS Edge AI Console that addresses these challenges by combining AI-driven scoring, real-time QC monitoring, and workload-aware hardware acceleration on a standard Windows laptop with CPU + iGPU.<br>
 
 **Steps to run the reference solution**: 
 
-cd into the folder 
-python -m venv venv  # start virtual environment 
-venv\Scripts\activate 
-pip install -r requirements.txt
+cd into the folder <br>
+python -m venv venv  # start virtual environment <br>
+venv\Scripts\activate <br>
+pip install -r requirements.txt <br>
  
-python data_simulation.py
-python autoqc_train.py
-python autoqc_infer.py 
-python hit_train.py
-python hit_infer.py 
-python drift_train.py
-python drift_infer.py
+python data_simulation.py <br>
+python autoqc_train.py <br>
+python autoqc_infer.py <br>
+python hit_train.py <br>
+python hit_infer.py <br>
+python drift_train.py <br>
+python drift_infer.py <br>
 
-python ui_v3_ADLM.py
+python ui_v3_ADLM.py <br>
 
+<br><br>
 
 **What does the User Interface (UI) shows**: 
 1.	Operational Stability Monitoring (Top Left Quadrant):
