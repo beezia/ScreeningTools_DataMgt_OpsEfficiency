@@ -2,12 +2,12 @@
 
 **Overview**
 <br><br>
-This is Reference application and a demo showcasing Screening Tools Edge AI running on CPU + integrated GPU, that can:<br>
+This is a reference application and a demo showcasing Screening Tools Edge AI running on CPU + integrated GPU, that can:<br>
 	1. Detect anomalous results in real time (Auto-QC)<br>
 	2. Prioritize true biological “hits” vs noise <br>
 	3. Reduce manual review workload <br>
 	4. Provide predictive operational insights <br>
-    5. Run entirely on commodity edge hardware <br>
+        5. Run entirely on commodity edge hardware <br>
 
 <br>
 High-throughput screening (HTS) tools like Abbott Alinity, Hologic Panther, and Siemens Atellica—generate thousands of assay results per hour. While instrument automation has advanced, laboratories face persistent challenges:
