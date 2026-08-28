@@ -1,182 +1,262 @@
-# ScreeningTools_DataMgt_OpsEfficiency
+# Screening Tools Edge AI Reference Application
 
-**Overview**
-<br><br>
-This is a reference application and a demo showcasing Screening Tools Edge AI running on CPU + integrated GPU, that can:<br>
-	1. Detect anomalous results in real time (Auto-QC)<br>
-	2. Prioritize true biological “hits” vs noise <br>
-	3. Reduce manual review workload <br>
-	4. Provide predictive operational insights <br>
-    5. Run entirely on commodity edge hardware <br>
+## Overview
 
-<br>
-High-throughput screening (HTS) tools like Abbott Alinity, Hologic Panther, and Siemens Atellica—generate thousands of assay results per hour. While instrument automation has advanced, laboratories face persistent challenges:<br>
-	1. Operational instability: subtle calibration drifts or mechanical issues can compromise data quality.<br>
-	2. Biological prioritization: identifying top candidates quickly from thousands of samples is slow without AI.<br>
-	3. Data overload: managing assay and QC metrics in real time is complex.<br>
-	4. Inefficient resource usage: CPU-heavy processing leaves iGPUs underutilized in edge deployments.<br>
+This reference application and demo showcases Screening Tools Edge AI running on a CPU and integrated GPU (iGPU). It demonstrates how edge AI can:
 
-<br>
-This reference Solution (can be a demo)
-This reference solution runs an HTS Edge AI Console that addresses these challenges by combining AI-driven scoring, real-time QC monitoring, and workload-aware hardware acceleration on a standard Windows laptop with CPU + iGPU.<br>
+1. Detect anomalous results in real time with AutoQC.
+2. Prioritize true biological hits over noise.
+3. Reduce manual review workload.
+4. Provide predictive operational insights.
+5. Run entirely on commodity edge hardware.
 
-**Steps to run the reference solution**: 
+## Problem Statement
 
-cd into the folder <br>
-python -m venv venv  # start virtual environment <br>
-venv\Scripts\activate <br>
-pip install -r requirements.txt <br>
- 
-python data_simulation.py <br>
-python autoqc_train.py <br>
-python autoqc_infer.py <br>
-python hit_train.py <br>
-python hit_infer.py <br>
-python drift_train.py <br>
-python drift_infer.py <br>
+High-throughput screening (HTS) tools, such as Abbott Alinity, Hologic Panther, and Siemens Atellica, generate thousands of assay results per hour. Although instrument automation has advanced, laboratories continue to face several challenges:
 
-python ui_v3_ADLM.py <br>
+1. **Operational instability:** Subtle calibration drift or mechanical issues can compromise data quality.
+2. **Biological prioritization:** Identifying top candidates quickly from thousands of samples is difficult without AI.
+3. **Data overload:** Managing assay and quality-control metrics in real time is complex.
+4. **Inefficient resource utilization:** CPU-heavy processing can leave iGPUs underutilized in edge deployments.
 
-<br><br>
+## Reference Solution
 
-**What does the User Interface (UI) shows**: 
-1.	Operational Stability Monitoring (Top Left Quadrant):
-      o	Continuous visualization of assay value trends to detect calibration drift, noise, or instability.
-      o	Provides immediate visual cues: flat trends → stable, noisy trends → potential mechanical issues.
-2.	Biological Prioritization (Top Right Quadrant):
-      o	Deep MLP AI model ranks samples based on predicted biological relevance.
-      o	Highlights top 1% hits with black-outlined markers and labels best candidates for rapid follow-up.
-      o	Scatter plot shows assay value vs AI hit score for instant interpretability.
-3.	Real-Time Anomaly Tracking (Lower Left Quadrant):
-      o	AutoQC continuously flags operational anomalies using AI.
-      o	Red dots indicate samples requiring attention, providing instant anomaly detection.
-4.	Workload Distribution & Hardware Acceleration (Lower Right Quadrant):
-      o	Dynamic bar chart shows CPU vs iGPU utilization.
-      o	Table indicates which workloads run where: AutoQC, Hit Scoring, Baseline inference, Neural network inference.
-      o	Batch size slider allows stressing the iGPU to demonstrate hardware acceleration efficiency.
-5.	KPI Metrics & Latency Monitoring:
-      o	Total samples, anomalies, top hits, throughput (samples/hr).
-      o	Real-time CPU and iGPU latency displayed to demonstrate hardware performance.
+The reference solution runs an HTS Edge AI Console that combines AI-driven scoring, real-time quality-control monitoring, and workload-aware hardware acceleration. The demo runs on a standard Windows laptop with a CPU and iGPU.
 
-**What the dashboard is simulating**: 
-Total Samples
-This simulates: Number of assay results processed in real time.
-Every few seconds, a new batch of synthetic samples is generated (like incoming patient or screening samples).
+## Getting Started
 
-Anomalies (AutoQC Model)
-This comes from your Isolation Forest AutoQC model.
-It detects:
-	• Instrument drift
-	• QC metric outliers
-	• Abnormal assay patterns
-	• Potential reagent or temperature instability
-Red points on the scatter plot = flagged as operational risk.
-  In a real instrument, this could:
-	• Trigger preventative maintenance
-	• Prevent reporting bad results
-	• Reduce false positives/negatives
-	• Improve uptime
+### Prerequisites
 
-Avg Hit Score (MLP Model via ONNX)
-This is a hit prioritization neural network running on:
-	• CPU
-	• Or iGPU (DirectML)
-It simulates:
-	AI scoring compounds or samples for likelihood of being a "true hit"
-In real HTS pharma screening, this helps:
-	• Reduce follow-up workload
-	• Prioritize high-value samples
-	• Improve downstream validation efficiency
+- Windows system with a CPU and integrated GPU
+- Python
+- Project dependencies listed in `requirements.txt`
 
-Assay Value Trend Chart
-Top chart shows:
-	• Streaming assay values over time
-	• Operational stability view
-	• Drift detection visualization
-In real lab terms:
-This is what lab engineers watch to ensure assay consistency.
+### Setup and Execution
 
-Hit Score vs Assay Value Scatter Plot
-Bottom chart shows:
-	• X-axis = AI hit confidence
-	• Y-axis = Assay measurement
-	• Red dots = anomalies
-This visually demonstrates:
-	AI can simultaneously score biological relevance AND detect operational risk.
-This is powerful because traditional HTS systems treat these separately.
+Open a terminal, change to the project folder, and run the following commands:
 
-Speedup (CPU vs iGPU)
-We are benchmarking:
-	• CPU inference time
-	• Intel Core Ultra iGPU (DirectML) inference time
-This demonstrates:
-	Edge AI acceleration without adding discrete GPUs.
-For companies building next-gen instruments, this means:
-	• No extra hardware cost
-	• No cloud dependency
-	• Real-time AI at the instrument
-	• Lower latency
-	• Lower bandwidth
-	• Better cybersecurity
+```powershell
+cd <project-folder>
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-**Detailed Flow of the Reference Application**
+Generate the simulated data, train the models, and run inference:
 
-1. AutoQC models (autoqc_train & autoqc_infer)
-	• Purpose: Detect operational anomalies in the screening instrument. Think of this as real-time QC monitoring.
-	• Flow:
-		○ autoqc_train.py → trains the model on historical QC/instrument data.
-		○ autoqc_infer.py → takes new incoming sample data (assay values, instrument readings, etc.) and predicts anomalies (anomaly_flag).
-	• Dashboard role:
-		○ Lower-left quadrant: Real-Time Anomaly Tracking.
-		○ Shows red dots for flagged anomalies.
-		○ Contributes to the “Anomalies” metric in the KPI bar.
-	• Hardware: Runs on CPU, because AutoQC is lightweight.
-	• Latency: Can measure CPU inference time per batch and display in workload table.
+```powershell
+python data_simulation.py
+python autoqc_train.py
+python autoqc_infer.py
+python hit_train.py
+python hit_infer.py
+python drift_train.py
+python drift_infer.py
+```
 
-2. Drift models (drift_train & drift_infer)
-	• Purpose: Monitor long-term drift in the assay values or instrument behavior.
-	• Flow:
-		○ drift_train.py → deep MLP trained to detect trends or deviations over time.
-		○ drift_infer.py → computes drift scores on incoming batches.
-	• Dashboard role:
-		○ Could feed Operational Stability chart (top-left) showing flat vs sloped vs noisy trends.
-	• Hardware: Runs on CPU, lightweight.
-	• Latency: Usually very fast, can include as a baseline CPU workload.
+Launch the dashboard:
 
-3. Hit scoring models (hit_train & hit_infer)
-	• Purpose: Rank samples by biological priority. This is the main AI ranking.
-	• Flow:
-		○ hit_train.py → trains deep MLP on assay features to predict hit scores.
-		○ hit_infer.py → generates hit scores for each batch of samples.
-	• Dashboard role:
-		○ Top-right quadrant: Biological Prioritization chart.
-		○ Top 1% hits highlighted, top candidates auto-labeled.
-	• Hardware:
-		○ Runs on iGPU (DML) to showcase accelerated inference.
-		○ CPU can also run it but iGPU is preferred for demo purposes.
-	• Latency: Measures iGPU throughput for Samples/hr metric; can be shown in workload table.
+```powershell
+python ui_v3_ADLM.py
+```
 
-4. UI (ui.py or ui_v3_ADLM.py)
-	• Purpose: Dashboard that ties everything together in real-time.
-	• Flow:
-		1. Generates new sample batch (batch_size rows).
-		2. Sends batch to:
-			§ AutoQC → anomaly predictions → lower-left chart & KPI.
-			§ Hit scoring → hit scores → top-right chart & KPI.
-			§ Drift → operational stability → top-left chart.
-		3. Updates KPI bar (total samples, anomalies, top hits, Samples/hr).
-		4. Updates workload table with CPU/iGPU tasks and optionally latency.
-		5. Updates bottom-right chart (CPU/iGPU utilization).
-	• Hardware visualization: Shows CPU utilization, iGPU utilization, and workload mapping.
+## User Interface
 
-How they all connect
-Model / Script	Input	Output	Hardware	UI Component
-autoqc_train.py	Historical QC data	Trained AutoQC model	CPU	N/A
-autoqc_infer.py	New sample batch	anomaly_flag (-1 or 1)	CPU	Lower-left chart, KPI
-drift_train.py	Historical assay/instrument data	Trained drift model	CPU	N/A
-drift_infer.py	New sample batch	Drift score per sample	CPU	Top-left chart
-hit_train.py	Sample features	Trained hit MLP model	CPU/iGPU	N/A
-hit_infer.py	New sample batch	Hit scores per sample	iGPU	Top-right chart, KPI
-ui.py	X_new batch	Calls AutoQC, Drift, Hit models	CPU/iGPU	All charts, KPI, workload table
+### Operational Stability Monitoring
 
+The top-left quadrant provides continuous visualization of assay-value trends to detect calibration drift, noise, or instability.
 
+- Flat trends indicate stable operation.
+- Noisy trends can indicate potential mechanical issues.
+
+### Biological Prioritization
+
+The top-right quadrant uses a deep multilayer perceptron (MLP) model to rank samples by predicted biological relevance.
+
+- Highlights the top 1% of hits with black-outlined markers.
+- Labels the best candidates for rapid follow-up.
+- Plots assay value against AI hit score for immediate interpretability.
+
+### Real-Time Anomaly Tracking
+
+The lower-left quadrant uses AutoQC to continuously flag operational anomalies.
+
+- Red dots identify samples that require attention.
+- The visualization provides immediate anomaly detection.
+
+### Workload Distribution and Hardware Acceleration
+
+The lower-right quadrant visualizes CPU and iGPU utilization.
+
+- A dynamic bar chart shows CPU and iGPU utilization.
+- A workload table identifies where AutoQC, hit scoring, baseline inference, and neural-network inference run.
+- A batch-size slider can increase the iGPU workload to demonstrate hardware-acceleration efficiency.
+
+### KPI and Latency Monitoring
+
+The dashboard displays:
+
+- Total samples
+- Anomalies
+- Top hits
+- Throughput in samples per hour
+- Real-time CPU latency
+- Real-time iGPU latency
+
+## What the Dashboard Simulates
+
+### Total Samples
+
+The total-samples metric represents the number of assay results processed in real time. Every few seconds, the application generates a new batch of synthetic samples to simulate incoming patient or screening samples.
+
+### Anomalies: AutoQC Model
+
+The Isolation Forest AutoQC model detects:
+
+- Instrument drift
+- Quality-control metric outliers
+- Abnormal assay patterns
+- Potential reagent or temperature instability
+
+Red points on the scatter plot represent samples flagged as operational risks. In a real instrument, these signals could support preventive maintenance, prevent reporting of poor-quality results, reduce false positives and false negatives, and improve uptime.
+
+### Average Hit Score: MLP Model Through ONNX
+
+The hit-prioritization neural network runs on either the CPU or the iGPU through DirectML. It simulates AI scoring of compounds or samples based on the likelihood that they are true hits.
+
+In high-throughput pharmaceutical screening, hit scoring can help:
+
+- Reduce follow-up workload.
+- Prioritize high-value samples.
+- Improve downstream validation efficiency.
+
+### Assay-Value Trend Chart
+
+The top chart displays:
+
+- Streaming assay values over time
+- An operational-stability view
+- Drift-detection visualization
+
+In a laboratory environment, this view helps engineers monitor assay consistency.
+
+### Hit Score Versus Assay Value
+
+The scatter plot displays:
+
+- **X-axis:** AI hit confidence
+- **Y-axis:** Assay measurement
+- **Red dots:** Anomalies
+
+This view demonstrates how AI can score biological relevance and detect operational risk at the same time. Traditional HTS systems often handle these functions separately.
+
+### CPU Versus iGPU Speedup
+
+The application benchmarks:
+
+- CPU inference time
+- Intel Core Ultra iGPU inference time through DirectML
+
+The comparison demonstrates edge AI acceleration without a discrete GPU. For companies building next-generation instruments, this can support:
+
+- No additional discrete-GPU hardware cost
+- No cloud dependency
+- Real-time AI at the instrument
+- Lower latency
+- Lower bandwidth requirements
+- Improved cybersecurity posture
+
+## Application Flow
+
+### AutoQC Models
+
+**Scripts:** `autoqc_train.py` and `autoqc_infer.py`
+
+**Purpose:** Detect operational anomalies in the screening instrument and provide real-time quality-control monitoring.
+
+**Flow:**
+
+1. `autoqc_train.py` trains the model on historical quality-control and instrument data.
+2. `autoqc_infer.py` processes incoming sample data, including assay values and instrument readings, and predicts `anomaly_flag` values.
+
+**Dashboard integration:**
+
+- Feeds the real-time anomaly-tracking view in the lower-left quadrant.
+- Displays red dots for flagged anomalies.
+- Contributes to the **Anomalies** KPI.
+
+**Hardware:** CPU, because AutoQC is lightweight.
+
+**Latency:** CPU inference time can be measured per batch and displayed in the workload table.
+
+### Drift Models
+
+**Scripts:** `drift_train.py` and `drift_infer.py`
+
+**Purpose:** Monitor long-term drift in assay values or instrument behavior.
+
+**Flow:**
+
+1. `drift_train.py` trains a deep MLP to detect trends or deviations over time.
+2. `drift_infer.py` calculates drift scores for incoming batches.
+
+**Dashboard integration:**
+
+- Feeds the operational-stability chart in the top-left quadrant.
+- Supports visualization of flat, sloped, or noisy trends.
+
+**Hardware:** CPU, because the workload is lightweight.
+
+**Latency:** Provides a fast baseline CPU workload.
+
+### Hit-Scoring Models
+
+**Scripts:** `hit_train.py` and `hit_infer.py`
+
+**Purpose:** Rank samples by biological priority.
+
+**Flow:**
+
+1. `hit_train.py` trains a deep MLP on assay features to predict hit scores.
+2. `hit_infer.py` generates hit scores for each incoming sample batch.
+
+**Dashboard integration:**
+
+- Feeds the biological-prioritization chart in the top-right quadrant.
+- Highlights the top 1% of hits.
+- Automatically labels top candidates.
+- Contributes to the hit-scoring KPI.
+
+**Hardware:** CPU or iGPU. The iGPU through DirectML is preferred for the demo.
+
+**Latency:** Measures iGPU throughput for the **Samples/hour** metric and can be displayed in the workload table.
+
+### User Interface
+
+**Script:** `ui_v3_ADLM.py` or `ui.py`, depending on the project configuration.
+
+**Purpose:** Connect the models and visualizations in a real-time dashboard.
+
+**Flow:**
+
+1. Generate a new sample batch containing `batch_size` rows.
+2. Send the batch to AutoQC for anomaly prediction.
+3. Send the batch to the hit-scoring model for biological-priority scoring.
+4. Send the batch to the drift model for operational-stability analysis.
+5. Update the KPI bar with total samples, anomalies, top hits, and samples per hour.
+6. Update the workload table with CPU and iGPU tasks and optional latency measurements.
+7. Update the CPU and iGPU utilization chart.
+
+**Hardware visualization:** Displays CPU utilization, iGPU utilization, and workload mapping.
+
+## Component Mapping
+
+| Model or script | Input | Output | Hardware | UI component |
+|---|---|---|---|---|
+| `autoqc_train.py` | Historical quality-control data | Trained AutoQC model | CPU | Not applicable |
+| `autoqc_infer.py` | New sample batch | `anomaly_flag` (`-1` or `1`) | CPU | Lower-left chart and KPI bar |
+| `drift_train.py` | Historical assay and instrument data | Trained drift model | CPU | Not applicable |
+| `drift_infer.py` | New sample batch | Drift score per sample | CPU | Top-left chart |
+| `hit_train.py` | Sample features | Trained hit MLP model | CPU or iGPU | Not applicable |
+| `hit_infer.py` | New sample batch | Hit score per sample | iGPU | Top-right chart and KPI bar |
+| `ui.py` or `ui_v3_ADLM.py` | New sample batch (`X_new`) | Calls AutoQC, drift, and hit models | CPU and iGPU | All charts, KPI bar, and workload table |
